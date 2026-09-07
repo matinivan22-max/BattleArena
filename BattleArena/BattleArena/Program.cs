@@ -3,7 +3,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
+using static BattleArena.Warriors.Marksman;
+
 
 namespace BattleArena
 {
@@ -11,22 +14,23 @@ namespace BattleArena
     {
         static void Main(string[] args)
         {
-            int round = 1;
-            Warrior Agoot = new Warrior("Agoot", 300, 15, "Dinilaan");
-            Warrior Orbading = new Warrior("Orbading", 150, 32, "Sinubo");
-            Warrior Dedong = new Warrior("Dedong", 200, 20, "Pinwetan");
+            var atlas = new Tank("atlas", 300, 15, 5);
+            var Orbeast = new Marksman("Orbeast", 150, 32, 10 );
+            var balmond = new Fighter("balmond", 200, 20, 7);
 
-            Agoot.DisplayStatus();
-            Orbading.DisplayStatus();
-            Dedong.DisplayStatus();
+            atlas.DisplayStatus();
+            Orbeast.DisplayStatus();
+            balmond.DisplayStatus();
 
-            while (Agoot.IsAlive && Orbading.IsAlive)
+            while (atlas.IsAlive && Orbeast.IsAlive)
             {
-                Console.WriteLine($"---------------- Round {round}  ----------------");
-                Orbading.Attack(Agoot);
-                Agoot.Attack(Orbading);
-                Console.WriteLine("------------------------------------------");
-                round++;
+                Console.WriteLine("\n\n====================================");
+                atlas.Attack(Orbeast);
+                Thread.Sleep(1000);
+                Orbeast.Attack(atlas);
+                Thread.Sleep(1000);
+                Console.WriteLine("------------------------------------");
+
             }
 
             Console.ReadKey();
