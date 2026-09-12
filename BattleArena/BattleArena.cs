@@ -1,8 +1,11 @@
-﻿using BattleArena.Enums;
+﻿using BattleArena.Abilities;
+using BattleArena.Combat;
+using BattleArena.Enums;
 using BattleArena.Warriors;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -11,86 +14,150 @@ namespace BattleArena
     public static class BattleArena
     {
         private static readonly Random _random = new Random();
-
-        static List<Warriors.Warrior> _warrior = new List<Warriors.Warrior>();
-
+        static List<Warriors.Warrior> _warriors = new List<Warriors.Warrior>();
+        static List<TurnEntry> _entries = new List<TurnEntry>();
+        static List<TurnEntry> _teamA;
+        static List<TurnEntry> _teamB;
 
         public static void StartBattle()
         {
+            Console.WriteLine("=============================");
+            Console.WriteLine("       Battle Arena");
+            Console.WriteLine("=============================");
+            Console.WriteLine();
+            InitializeTeams();
             DisplayWarriors();
+
+            Console.WriteLine("---------Battle Start-------");
+
+            int round = 1;
+
+            while (CountAlive() >1)
+            {
+                Console.WriteLine($"\n++++++++++++++ Round {round} ++++++++++++++");
+
+                Console.WriteLine("--------------  Team A:  --------------\n");
+                foreach (var entry in _teamA)
+                {
+                    if(entry.Warrior.IsAlive)
+                        entry.Warrior.DisplayStatus();
+                }
+
+                Console.WriteLine("--------------  Team B:  --------------\n");
+                foreach (var entry in _teamB)
+                {
+                    if (entry.Warrior.IsAlive)
+                        entry.Warrior.DisplayStatus();
+                }
+                Console.WriteLine("-----------------------------------------");
+
+                RunRound();
+                Console.WriteLine();
+                Console.WriteLine();
+                Console.WriteLine();
+                Console.WriteLine();
+                round++;
+            }
+
+            DisplayWinner();
+            Console.WriteLine("\n---------Battle Ended-------");
         }
-        public static void AddWarrior(Warriors.Warrior warrior)
+
+        public static void AddWarrior(Warrior warrior)
         {
-            _warrior.Add(warrior);
+            _warriors.Add(warrior);
+        }
+
+        private static void InitializeTeams()
+        {
+            _teamA = _warriors.Where(w => w.TeamType == TeamType.A)
+                .Select(w => new TurnEntry(w, 0)).ToList();
+            _teamB = _warriors.Where(w => w.TeamType == TeamType.B)
+                .Select(w => new TurnEntry(w, 0)).ToList();
         }
 
         private static void DisplayWarriors()
         {
-            var TeamA = _warrior.Where(w => w.Team == Enums.TeamType.A).ToList();
-            var TeamB = _warrior.Where(w => w.Team == Enums.TeamType.B).ToList();
+            Console.WriteLine("==========  Team A:  ==========\n");
+            foreach (var turnEntry in _teamA)
+                Console.WriteLine($"\t---++++ {turnEntry.Warrior.Name} ++++--_" +
+                    $"\n\t [*] Health: {turnEntry.Warrior.Health}," +
+                    $"\n\t [*] Attack Power: {turnEntry.Warrior.AttackPower}, " +
+                    $"\n\t [*] Speed: {turnEntry.Warrior.Speed}) \n");
 
-            Console.WriteLine("======= Team A =======");
-            foreach (var warrior in TeamA)
-                Console.WriteLine($"{warrior.Name}" +
-                    $"\n Health: {warrior.Health}" +
-                    $"\n Attack Power: {warrior.AttackPower}" +
-                    $"\n Team: {warrior.Team}");
+            Console.WriteLine("==========  Team B:  ==========\n");
+            foreach (var turnEntry in _teamB)
+                Console.WriteLine($"\t---++++ {turnEntry.Warrior.Name} ++++--_" +
+                    $"\n\t [*] Health: {turnEntry.Warrior.Health}," +
+                    $"\n\t [*] Attack Power: {turnEntry.Warrior.AttackPower}, " +
+                    $"\n\t [*] Speed: {turnEntry.Warrior.Speed}) \n");
+        }
 
-            Console.WriteLine("\n======= Team B =======");
-            foreach (var warrior in TeamB)
-                Console.WriteLine($"{warrior.Name}" +
-                    $"\n Health: {warrior.Health}" +
-                    $"\n Attack Power: {warrior.AttackPower}" +
-                    $"\n Team: {warrior.Team}");
+        private static void DisplayWinner()
+        {
+            var winningTeam = _teamA.Any(w => w.Warrior.IsAlive) ? "Team A" : "Team B";
+            Console.WriteLine($"\nCongratulations! {winningTeam} wins the battle!");
         }
 
         private static void RunRound()
         {
-            var turnOrder = CreateTurnOrder;
+            var turnOrder = CreateTurnOrder();
 
-            foreach (var entry in turnOrder)
+
+            foreach (var entry  in turnOrder)
             {
                 var attacker = entry.Warrior;
-                if (attacker.IsAlive && !entry.IsAttacked) ;
+                if (!attacker.IsAlive) continue;
+
+                var target = FindOpponent(attacker);
+                if (target == null) continue;
+
+                if (attacker is IHealCaster)
                 {
-                    attacker.Attack();
+                    var healer = (IHealCaster)attacker;
+                    var teamMates = attacker.TeamType == TeamType.A ? _teamA : _teamB;
+                    healer.HealTeamMates(teamMates.Select(t => t.Warrior).ToList());
                 }
+
+                attacker.Attack(target);
             }
         }
-        private static List<Turn> CreateTurnOrder()
+
+        private static List<TurnEntry> CreateTurnOrder()
         {
-            var teams = new List<TeamType>
+            var turnOrder = new List<TurnEntry>();
+
+            foreach (var warrior  in _warriors)
             {
-                TeamType.A,
-                TeamType.B
-            };
-            var turnOrder = new List<Turn>();
-            foreach (var team in teams)
-            {
-                var warriors = _warrior.Where(w => w.Team == team && w.IsAlive).ToList();
-                foreach (var warrior in warriors)
-                {
-                    turnOrder.Add(new Turn(warrior, false));
-                }
+                if (!warrior.IsAlive) continue;
+
+                int random = _random.Next(1, 21);
+                int initiative = warrior.Speed + random;
+                turnOrder.Add(new TurnEntry(warrior, initiative));
             }
-            return turnOrder.OrderBy(t => _random.Next()).ToList();
+
+            return turnOrder.OrderBy(t => t.Initiative).ToList();
+        }
+
+
+        private static Warrior FindOpponent(Warrior attacker)
+        {
+            var opponentTeam = attacker.TeamType == TeamType.A ? _teamB : _teamA;
+            var validOpponents = opponentTeam.Where(t => t.Warrior.IsAlive).ToList();
+            if (validOpponents.Count == 0) return null;
+
+            int index = _random.Next(validOpponents.Count);
+            return validOpponents[index].Warrior;
         }
 
 
-        private static void Attack(Turn attacker)
+        private static int CountAlive()
         {
-            var opponent = FindOpponent(attacker)
-                attacker.IsAttacked = true;
-            attacker.Warrior.Attack(opponent.Warrior);
-        }
+            int cnt = 0;
 
-        private statoc TurnEntry FindOpponent(Turn attacker)
-        {
-            var opponentTeam = attacker.Warrior.Team == Enums.TeamType.A ? Enums.TeamType.B : Enums.TeamType.A;
-            var Validopponent = _warrior.FirstOrDefault(w => w.Team == opponentTeam && w.IsAlive);
-            if (ValidatOpponent(opponent))
-            {
-            }
+            foreach (var warrior in _warriors)
+                if (warrior.IsAlive) cnt++;
+            return cnt;
         }
     }
 }

@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace BattleArena.Enums
 {
-        public enum WarriorType
-        {
-            Fighter,
-            Marksman,
-            Tank,
-            Mage,
-        }
+    public enum WarriorType
+    {
+        Fighter,
+        Marksman,
+        Tank,
+        Magery,
+    }
 }

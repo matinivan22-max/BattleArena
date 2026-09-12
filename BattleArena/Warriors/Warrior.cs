@@ -16,6 +16,7 @@ namespace BattleArena.Warriors
         public string Name { get; private set; }
         public int Health { get; private set; }
         public int AttackPower { get; private set; }
+        public int Speed { get; private set; }
 
         public WarriorType WarriorType { get; private set; }
         public TeamType TeamType { get; private set; }
@@ -42,13 +43,12 @@ namespace BattleArena.Warriors
             private set { _hasCriticalChance = value; }
         }
 
-        public TeamType Team => throw new NotImplementedException();
-
         public Warrior(string name, int health, int attackPower, int speed, WarriorType warriorType, TeamType teamType)
         {
             Name = name;
             Health = health;
             AttackPower = attackPower;
+            Speed = speed;
             WarriorType = warriorType;
             TeamType = teamType;
         }
@@ -62,21 +62,21 @@ namespace BattleArena.Warriors
 
         public virtual void DisplayStatus()
         {
-            Console.WriteLine($"\t---== {Name} ==---");
+            Console.WriteLine($"---== {Name} ==---");
 
             if (_damageTaken.IsCritical)
-                Console.WriteLine($"\t---- Critical Hit ----");
+                Console.WriteLine($"---- Critical Hit ----");
 
-            Console.WriteLine($"\t[*] Health: {Health}");
-            Console.WriteLine($"\t[*] Attack Power: {AttackPower}");
-            Console.WriteLine($"\t[*] Damage Taken: {_damageTaken.TotalAmountDamage}");
+            Console.WriteLine($"[*] Health: {Health}");
+            Console.WriteLine($"[*] Attack Power: {AttackPower}");
+            Console.WriteLine($"[*] Damage Taken: {_damageTaken.TotalAmountDamage}");
         }
 
         public abstract void Attack(Warrior target);
 
         public void ReceiveHealing(int amount, Warrior healer)
         {
-            if (healer.TeamType == TeamType)
+            if ( healer.TeamType == TeamType )
             {
                 Health += amount;
                 Console.WriteLine($"->{Name}: Received healing from {healer.Name}! Health is now {Health}");

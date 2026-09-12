@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{A60CE789-E65A-49F9-84EA-99F9E0CE986F}</ProjectGuid>
+    <ProjectGuid>{DE98588F-DC2E-44A5-A63D-856FF9F99C01}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <RootNamespace>BattleArena</RootNamespace>
     <AssemblyName>BattleArena</AssemblyName>
@@ -48,15 +48,16 @@
     <Compile Include="Abilities\IHealCaster.cs" />
     <Compile Include="Abilities\ISpellCaster.cs" />
     <Compile Include="BattleArena.cs" />
+    <Compile Include="Combat\TurnEntry.cs" />
     <Compile Include="Enums\TeamType.cs" />
     <Compile Include="Enums\WarriorType.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Warriors\Characters\Medillo.cs" />
-    <Compile Include="Combat\DamageInfo.cs" />
-    <Compile Include="Warriors\Characters\Balmond.cs" />
-    <Compile Include="Warriors\Characters\Orbeast.cs" />
     <Compile Include="Warriors\Characters\Agoot.cs" />
+    <Compile Include="Combat\DamageInfo.cs" />
+    <Compile Include="Warriors\Characters\Muhat.cs" />
+    <Compile Include="Warriors\Characters\Raymond.cs" />
+    <Compile Include="Warriors\Characters\Kirk.cs" />
     <Compile Include="Warriors\Warrior.cs" />
   </ItemGroup>
   <ItemGroup>

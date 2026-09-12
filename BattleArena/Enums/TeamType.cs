@@ -8,7 +8,7 @@ namespace BattleArena.Enums
 {
     public enum TeamType
     {
-        A,
-        B,
+        A, 
+        B
     }
 }

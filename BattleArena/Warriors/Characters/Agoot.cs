@@ -1,58 +1,49 @@
-﻿using BattleArena.Combat;
-using System;
+﻿using BattleArena.Abilities;
+using BattleArena.Combat;
 using BattleArena.Enums;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using System.Threading;
-using BattleArena.Abilities;
+using System.Threading.Tasks;
 
 namespace BattleArena.Warriors.Characters
 {
-    public class Agoot : Warrior, IDefender
+    public class Agoot : Warrior, IHealCaster
     {
-        public int Shield { get; set; }
-        public Agoot(int health, int attackPower, int shield, int speed, TeamType teamType)
-            : base("Agoot", health, attackPower, speed, WarriorType.Tank, teamType)
+        public int HealingAmount { get; set; }
+        public Agoot(int health, int attackPower, int speed, int healingAmount, TeamType teamType)
+            : base("Agoot", health, attackPower, speed, WarriorType.Magery, teamType)
         {
-            Shield = shield;
-            attackPower += shield;
+            HealingAmount = healingAmount;
         }
+
         public override void Attack(Warrior target)
         {
-            var dmginfo = new DamageInfo(AttackPower, "Shield", HasCriticalChance, this);
-            Console.WriteLine($"\t->{Name}: Susubuan kita~~! {target.Name}");
-            Thread.Sleep(1000);
+            var dmginfo = new DamageInfo(AttackPower, "Haplos", HasCriticalChance, this);
+            TakeDamage(dmginfo);
 
-            Console.WriteLine($"\t->{target.Name}: ahh~~~");
-            Thread.Sleep(1000);
+            Console.WriteLine($"->{Name}: Lasapin mo yung haplos ko {target.Name}!");
 
+            Thread.Sleep(1000);
             if (target.IsAlive)
-                Console.WriteLine($"\t->{target.Name}: {Name} sarappp mo {target.Name}");
-
-            Thread.Sleep(1000);
-            Console.WriteLine($"\t->* Damange Taken: {target}");
-            Console.WriteLine($"\t->* Health Remaining: {target.Health}");
-
+                Console.WriteLine($"->{target.Name}: Asar mama {Name}");
         }
 
-        protected override void TakeDamage(DamageInfo damage)
+        public void HealTeamMates( List<Warrior> teamMates)
         {
-            var newActualDamage = damage.TotalAmountDamage - Shield;
-
-            var blockChance = _random.Next(0, 100);
-            var isBlocked = blockChance < 50;
-            _damageTaken = damage;
-
-            if (isBlocked) Block();
-            else
+            foreach (var warrior in teamMates)
             {
-                var newDmgInfo = new DamageInfo(newActualDamage, damage.AttackType, damage.IsCritical, damage.From);
-                base.TakeDamage(newDmgInfo);
+                if (warrior.IsAlive && warrior.TeamType == TeamType)
+                {
+                    Console.WriteLine($"->{Name}: Hala, haplosin ko na lang si {warrior.Name}!");
+                    warrior.ReceiveHealing(HealingAmount, this);
+                }
+                else
+                    Console.WriteLine($"->{Name}: Sayang, patay na si {warrior.Name}. " +
+                        $"Hindi ko na siya mahaplos.");
             }
-        }
-
-        public void Block()
-        {
-            var blockMessage = $"Blocked {_damageTaken.TotalAmountDamage} damage from {_damageTaken.From.Name}!";
-
         }
     }
 }

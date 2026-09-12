@@ -1,0 +1,7 @@
+C:\Users\monmon\Desktop\battle arena\BattleArena\BattleArena\bin\Debug\BattleArena.exe.config
+C:\Users\monmon\Desktop\battle arena\BattleArena\BattleArena\bin\Debug\BattleArena.exe
+C:\Users\monmon\Desktop\battle arena\BattleArena\BattleArena\bin\Debug\BattleArena.pdb
+C:\Users\monmon\Desktop\battle arena\BattleArena\BattleArena\obj\Debug\BattleArena.csproj.AssemblyReference.cache
+C:\Users\monmon\Desktop\battle arena\BattleArena\BattleArena\obj\Debug\BattleArena.csproj.CoreCompileInputs.cache
+C:\Users\monmon\Desktop\battle arena\BattleArena\BattleArena\obj\Debug\BattleArena.exe
+C:\Users\monmon\Desktop\battle arena\BattleArena\BattleArena\obj\Debug\BattleArena.pdb

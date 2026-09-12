@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace BattleArena.Abilities
 {
-    internal interface IDefender
+    public interface IDefender
     {
         void Block();
     }

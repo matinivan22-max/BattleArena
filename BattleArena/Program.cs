@@ -13,27 +13,15 @@ namespace BattleArena
     {
         static void Main(string[] args)
         {
-            var Agoot = new Agoot(100, 30, 10, 5, TeamType.A);
-            var Orbeast = new Orbeast(200, 15, 20, 8, TeamType.B);
-            var Balmond = new Balmond(150, 20, 15, 7, TeamType.A);
+            var Raymond = new Raymond(100, 30, 25, 10, TeamType.A);
+            var Kirk = new Kirk( 200, 15, 10, 30, TeamType.B);
+            var Agoot = new Agoot(150, 20, 15, 10, TeamType.A);
 
-            Agoot.DisplayStatus();
-            Orbeast.DisplayStatus();
-            Balmond.DisplayStatus();
+            BattleArena.AddWarrior(Raymond);
+            BattleArena.AddWarrior(Kirk);
+            BattleArena.AddWarrior(Agoot);
 
-            while (Agoot.IsAlive && Orbeast.IsAlive)
-            {
-                Console.WriteLine("\n\n=================================================");
-                Agoot.Attack(Orbeast);
-                Orbeast.DisplayStatus();
-                Console.WriteLine("-------------------------------------------------");
-                Thread.Sleep(2000);
-                Orbeast.Attack(Agoot);
-                Agoot.DisplayStatus();
-                Thread.Sleep(2000);
-            }
-
-            Console.ReadKey();
+            BattleArena.StartBattle();
         }
     }
 }
