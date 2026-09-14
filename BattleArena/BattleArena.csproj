@@ -53,11 +53,17 @@
     <Compile Include="Enums\WarriorType.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Warriors\Characters\Adolfs.cs" />
     <Compile Include="Warriors\Characters\Agoot.cs" />
     <Compile Include="Combat\DamageInfo.cs" />
+    <Compile Include="Warriors\Characters\Athlon.cs" />
+    <Compile Include="Warriors\Characters\Busa.cs" />
+    <Compile Include="Warriors\Characters\Khia.cs" />
     <Compile Include="Warriors\Characters\Muhat.cs" />
+    <Compile Include="Warriors\Characters\Orbilat.cs" />
     <Compile Include="Warriors\Characters\Raymond.cs" />
     <Compile Include="Warriors\Characters\Kirk.cs" />
+    <Compile Include="Warriors\Characters\ROY.cs" />
     <Compile Include="Warriors\Warrior.cs" />
   </ItemGroup>
   <ItemGroup>

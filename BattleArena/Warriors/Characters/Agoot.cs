@@ -21,14 +21,14 @@ namespace BattleArena.Warriors.Characters
 
         public override void Attack(Warrior target)
         {
-            var dmginfo = new DamageInfo(AttackPower, "Haplos", HasCriticalChance, this);
+            var dmginfo = new DamageInfo(AttackPower, "kaltok di kalimot", HasCriticalChance, this);
             TakeDamage(dmginfo);
 
-            Console.WriteLine($"->{Name}: Lasapin mo yung haplos ko {target.Name}!");
+            Console.WriteLine($"->{Name}: suntok {target.Name}!");
 
             Thread.Sleep(1000);
             if (target.IsAlive)
-                Console.WriteLine($"->{target.Name}: Asar mama {Name}");
+                Console.WriteLine($"->{target.Name}: Ulul {Name}");
         }
 
         public void HealTeamMates( List<Warrior> teamMates)
@@ -37,12 +37,12 @@ namespace BattleArena.Warriors.Characters
             {
                 if (warrior.IsAlive && warrior.TeamType == TeamType)
                 {
-                    Console.WriteLine($"->{Name}: Hala, haplosin ko na lang si {warrior.Name}!");
+                    Console.WriteLine($"->{Name}: kotong dagdag heal {warrior.Name}!");
                     warrior.ReceiveHealing(HealingAmount, this);
                 }
                 else
                     Console.WriteLine($"->{Name}: Sayang, patay na si {warrior.Name}. " +
-                        $"Hindi ko na siya mahaplos.");
+                        $"Hindi ko na siya makokotongan.");
             }
         }
     }
